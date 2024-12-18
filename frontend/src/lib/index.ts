@@ -1,17 +1,13 @@
+import { BLACK, Color, Square, SQUARES } from "chess.js";
+
 export function getChessSquare(
   i: number,
   j: number,
-  playerColor: string
-): string {
-  const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-  const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
-  if (playerColor === "black") {
+  playerColor: Color
+): Square {
+  if (playerColor === BLACK) {
     i = 7 - i;
     j = 7 - j;
   }
-  if (i < 0 || i > 7 || j < 0 || j > 7) {
-    return "";
-  }
-
-  return files[j] + ranks[i];
+  return SQUARES[i * 8 + j];
 }

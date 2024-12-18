@@ -1,32 +1,49 @@
 "use client";
-import { Color, PieceSymbol, Square } from "chess.js";
+import { BLACK, Chess, Color, PieceSymbol, Square } from "chess.js";
 import { useState } from "react";
 import { getChessSquare } from "@/lib";
 import { ChessPiece } from "./ChessPiece";
-import { get } from "http";
 
 const INIT_GAME = "init_game";
 const MOVE = "move";
 const GAME_OVER = "game_over";
 
 export const ChessBoard = ({
+  chess,
   board,
   socket,
   playerColor,
+  onMove,
 }: {
+  chess: Chess;
   board: ({
     square: Square;
     type: PieceSymbol;
     color: Color;
   } | null)[][];
   socket: WebSocket;
-  playerColor: "white" | "black";
+  playerColor: Color;
+  onMove: (from: string, to: string) => void;
 }) => {
-  const [from, setFrom] = useState<string | null>(null);
-  let Board = playerColor === "black" ? [...board].reverse() : board;
-  if (playerColor === "black") {
+  const [from, setFrom] = useState<string>("");
+  const [attack, setAttack] = useState<Square[] | null>(null);
+
+  let Board = playerColor === BLACK ? [...board].reverse() : board;
+  if (playerColor === BLACK) {
     Board = Board.map((row) => [...row].reverse());
   }
+  const handleMove = (fromSquare: string, toSquare: string) => {
+    onMove(fromSquare, toSquare);
+    setAttack(null);
+    setFrom("");
+  };
+
+  const getAttackSquares = (from: Square) => {
+    const moves = chess.moves({ square: from, verbose: true });
+    const squares = moves.map((move) => move.to);
+    setAttack(squares);
+  };
+
   return (
     <div className="text-white-200">
       {Board.map((row, i) => {
@@ -37,21 +54,18 @@ export const ChessBoard = ({
               return (
                 <div
                   key={j}
-                  className={`flex justify-center items-center w-16 h-16 ${
+                  className={`flex justify-center items-center w-[4.5rem] h-[4.5rem] ${
                     (i + j) & 1 ? "bg-slate-600" : "bg-gray-200"
                   }`}
                   onClick={() => {
+                    if (square && square.color === playerColor) {
+                      getAttackSquares(square.square);
+                    }
                     if (!from && square) {
                       setFrom(squareId);
                     } else if (from) {
                       const to = squareId;
-                      socket.send(
-                        JSON.stringify({
-                          type: MOVE,
-                          move: { from, to },
-                        })
-                      );
-                      setFrom(null);
+                      handleMove(from, to);
                     }
                   }}
                   onDragOver={(e) => e.preventDefault()}
@@ -61,20 +75,18 @@ export const ChessBoard = ({
                     const toSquare = squareId;
 
                     if (fromSquare && toSquare) {
-                      socket.send(
-                        JSON.stringify({
-                          type: MOVE,
-                          move: { from: fromSquare, to: toSquare },
-                        })
-                      );
-                      setFrom(null);
+                      handleMove(fromSquare, toSquare);
                     }
                   }}
                 >
+                  {attack?.includes(squareId) && (
+                    <div className="absolute bg-red-500 bg-opacity-50 w-10 h-10 rounded-full"></div>
+                  )}
                   {square && (
                     <div
                       draggable
                       onDragStart={(e) => {
+                        getAttackSquares(square.square);
                         e.dataTransfer.setData("from", squareId);
                         setFrom(squareId);
                       }}

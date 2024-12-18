@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { Chess } from "chess.js";
+import { BLACK, Chess, WHITE } from "chess.js";
 import { GAME_OVER, INIT_GAME, MOVE } from "./messages";
 export class Game {
   //player 1 is white and player 2 is black
@@ -18,7 +18,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         playload: {
-          color: "white",
+          color: WHITE,
         },
       })
     );
@@ -26,7 +26,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         playload: {
-          color: "black",
+          color: BLACK,
         },
       })
     );
@@ -97,9 +97,9 @@ export class Game {
       JSON.stringify({
         type: MOVE,
         playload: {
-          board: this.board.board(),
-          // chess: this.board,
-          turn: this.board.turn() === "w" ? "white" : "black",
+          // board: this.board.board(),
+          fen: this.board.fen(),
+          // turn: this.board.turn() === "w" ? "white" : "black",
         },
       })
     );
@@ -107,30 +107,12 @@ export class Game {
       JSON.stringify({
         type: MOVE,
         playload: {
-          board: this.board.board(),
-          // chess: this.board,
-          turn: this.board.turn() === "w" ? "white" : "black",
+          // board: this.board.board(),
+          fen: this.board.fen(),
+          // turn: this.board.turn() === "w" ? "white" : "black",
         },
       })
     );
     console.log("move made inside makeMove at the end");
-
-    // if(this.board.turn() === "w") {
-    //     this.player1.send(JSON.stringify({
-    //         type: MOVE,
-    //         playload: {
-    //             board: this.board.fen(),
-    //             turn: "white"
-    //         }
-    //     }));
-    // } else {
-    //     this.player2.send(JSON.stringify({
-    //         type: MOVE,
-    //         playload: {
-    //             board: this.board.fen(),
-    //             turn: "black"
-    //         }
-    //     }));
-    // }
   }
 }
