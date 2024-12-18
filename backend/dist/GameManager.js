@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GameManager = void 0;
-const messeges_1 = require("./messeges");
+const messages_1 = require("./messages");
 const Game_1 = require("./Game");
+//BUG: if the pending user again sent the INIT_GAME message, the game will start with the same user
 class GameManager {
     constructor() {
         this.games = [];
@@ -21,7 +22,7 @@ class GameManager {
         socket.on("message", (data) => {
             const message = JSON.parse(data.toString());
             console.log("message received", message);
-            if (message.type === messeges_1.INIT_GAME) {
+            if (message.type === messages_1.INIT_GAME) {
                 if (this.pendingUser) {
                     //start game
                     const game = new Game_1.Game(this.pendingUser, socket);
@@ -32,7 +33,7 @@ class GameManager {
                     this.pendingUser = socket;
                 }
             }
-            if (message.type === messeges_1.MOVE) {
+            if (message.type === messages_1.MOVE) {
                 const game = this.games.find((game) => game.hasPlayer(socket));
                 if (game) {
                     console.log("makeMove fun called", message.move);

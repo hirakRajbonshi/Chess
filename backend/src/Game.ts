@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 import { Chess } from "chess.js";
-import { GAME_OVER, INIT_GAME, MOVE } from "../../shared/constants";
+import { GAME_OVER, INIT_GAME, MOVE } from "./messages";
 export class Game {
   //player 1 is white and player 2 is black
   private player1: WebSocket;

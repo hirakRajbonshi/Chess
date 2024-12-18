@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const chess_js_1 = require("chess.js");
-const messeges_1 = require("./messeges");
+const messages_1 = require("./messages");
 class Game {
     constructor(player1, player2) {
         this.player1 = player1;
@@ -11,13 +11,13 @@ class Game {
         this.startTime = new Date();
         console.log("game started inside constructor");
         this.player1.send(JSON.stringify({
-            type: messeges_1.INIT_GAME,
+            type: messages_1.INIT_GAME,
             playload: {
                 color: "white",
             },
         }));
         this.player2.send(JSON.stringify({
-            type: messeges_1.INIT_GAME,
+            type: messages_1.INIT_GAME,
             playload: {
                 color: "black",
             },
@@ -59,14 +59,14 @@ class Game {
                 winner = null;
             }
             this.player1.send(JSON.stringify({
-                type: messeges_1.GAME_OVER,
+                type: messages_1.GAME_OVER,
                 playload: {
                     result: result,
                     winner: winner,
                 },
             }));
             this.player2.send(JSON.stringify({
-                type: messeges_1.GAME_OVER,
+                type: messages_1.GAME_OVER,
                 playload: {
                     result: result,
                     winner: winner,
@@ -75,7 +75,7 @@ class Game {
         }
         //send the updated board to both players
         this.player1.send(JSON.stringify({
-            type: messeges_1.MOVE,
+            type: messages_1.MOVE,
             playload: {
                 board: this.board.board(),
                 // chess: this.board,
@@ -83,7 +83,7 @@ class Game {
             },
         }));
         this.player2.send(JSON.stringify({
-            type: messeges_1.MOVE,
+            type: messages_1.MOVE,
             playload: {
                 board: this.board.board(),
                 // chess: this.board,

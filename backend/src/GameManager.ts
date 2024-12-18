@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { INIT_GAME, MOVE } from "../../shared/constants";
+import { INIT_GAME, MOVE } from "./messages";
 import { Game } from "./Game";
 
 //BUG: if the pending user again sent the INIT_GAME message, the game will start with the same user
