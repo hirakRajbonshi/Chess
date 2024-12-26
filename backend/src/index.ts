@@ -1,14 +1,18 @@
-import { WebSocketServer } from "ws";
-import { GameManager } from "./GameManager";
+import dotenv from "dotenv";
+import { app } from "./app";
+import { PORT } from "./constats";
+import connectDB from "./db";
 
-const wss = new WebSocketServer({ port: 8080 });
-
-const gameManager = new GameManager();
-
-wss.on("connection", function connection(ws) {
-  gameManager.addUserToGame(ws);
-  //   ws.on("message", function message(data) {
-  //     console.log("received: %s", data);
-  //   });
-  ws.on("disconnect", () => gameManager.removeUserFromGame(ws));
+dotenv.config({
+  path: "./.env",
 });
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server is running on port", PORT);
+    });
+  })
+  .catch((err) => {
+    console.log("DB Connection Error", err);
+  });

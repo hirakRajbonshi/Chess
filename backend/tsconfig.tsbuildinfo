@@ -1,1 +1,1 @@
-{"root":["./src/game.ts","./src/gamemanager.ts","./src/index.ts","./src/messages.ts"],"version":"5.7.2"}
+{"root":["./src/app.ts","./src/constats.ts","./src/index.ts","./src/controllers/auth.controllers.ts","./src/controllers/testing.controllers.ts","./src/db/index.ts","./src/middlewares/auth.middlewares.ts","./src/models/game.models.ts","./src/models/user.models.ts","./src/routes/auth.routes.ts","./src/routes/testing.routes.ts","./src/utils/apirespones.ts","./src/utils/asynchandler.ts"],"version":"5.7.2"}
